@@ -17,8 +17,12 @@ interface Product extends Entity {
 
 type OrderStatus = "draft" | "paid" | "shipped" | "cancelled";
 
+// супер, общие инстансы правильно заданы
+
+// Ошибочка: Order должен наследоваться от Entity, но у тебя id: number, а в Entity id: string
+// Нужно исправить на id: string для консистентности
 type Order = {
-  id: number;
+  id: number; // <- должно быть id: string, как в Entity
   user: User;
   products: Product[];
   total: number;
@@ -48,7 +52,7 @@ function canUserBuy(user: User, total: number): boolean {
 function attachMeta<T>(data: T): WithMeta<T> {
   const dateNew = new Date();
   return {
-    data: data,
+    data: data, // ES6+ можно писать просто data (shorthand property)
     meta: {
       createdAt: dateNew,
       updatedAt: dateNew,
@@ -77,6 +81,7 @@ const products: Product[] = [
 ];
 
 const totalPrice: number = calcTotal(products);
+// const totalPrice = calcTotal(products); можно не указывать тип
 
 console.log(totalPrice)
 
