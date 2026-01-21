@@ -1,15 +1,30 @@
+const users: User[] = [
+  { id: "1", name: "София", age: 21, isAdmin: false },
+  { id: "2", name: "Алексей", age: 36, isAdmin: true },
+  { id: "3", name: "Марьяна", age: 32, isAdmin: true },
+  { id: "4", name: "Иван", age: 25, isAdmin: false },
+  { id: "5", name: "Вера", age: 41, isAdmin: true },
+];
 
-interface Entity {
+const products: Product[] = [
+  { id: "1", title: "Смартфон Samsung", price: 87000, inStock: true },
+  { id: "2", title: "Чехол для телефона", price: 1500, inStock: true },
+  { id: "3", title: "Смартфон iPhone", price: 115000, inStock: false },
+  { id: "4", title: "Смартфон Xiami", price: 26000, inStock: true },
+  { id: "5", title: "Ноутбук Macbook", price: 235000, inStock: true },
+];
+
+export interface Entity {
   id: string;
 }
 
-interface User extends Entity {
+export interface User extends Entity {
   name: string;
   age: number;
   isAdmin: boolean;
 }
 
-interface Product extends Entity {
+export interface Product extends Entity {
   title: string;
   price: number;
   inStock: boolean;
@@ -22,7 +37,8 @@ type OrderStatus = "draft" | "paid" | "shipped" | "cancelled";
 // Ошибочка: Order должен наследоваться от Entity, но у тебя id: number, а в Entity id: string
 // Нужно исправить на id: string для консистентности
 type Order = {
-  id: number; // <- должно быть id: string, как в Entity
+  // id: number; // <- должно быть id: string, как в Entity
+  id: string;
   user: User;
   products: Product[];
   total: number;
@@ -52,7 +68,8 @@ function canUserBuy(user: User, total: number): boolean {
 function attachMeta<T>(data: T): WithMeta<T> {
   const dateNew = new Date();
   return {
-    data: data, // ES6+ можно писать просто data (shorthand property)
+    // data: data, // ES6+ можно писать просто data (shorthand property)
+    data,
     meta: {
       createdAt: dateNew,
       updatedAt: dateNew,
@@ -64,27 +81,15 @@ function getById<T extends Entity>(items: T[], id: string): T | undefined {
   return items.find((item) => item.id === id);
 }
 
-const users: User[] = [
-  { id: "1", name: "София", age: 21, isAdmin: false },
-  { id: "2", name: "Алексей", age: 36, isAdmin: true },
-  { id: "3", name: "Марьяна", age: 32, isAdmin: true },
-  { id: "4", name: "Иван", age: 25, isAdmin: false },
-  { id: "5", name: "Вера", age: 41, isAdmin: true },
-];
-
-const products: Product[] = [
-  { id: "1", title: "Смартфон Samsung", price: 87000, inStock: true },
-  { id: "2", title: "Чехол для телефона", price: 1500, inStock: true },
-  { id: "3", title: "Смартфон iPhone", price: 115000, inStock: false },
-  { id: "4", title: "Смартфон Xiami", price: 26000, inStock: true },
-  { id: "5", title: "Ноутбук Macbook", price: 235000, inStock: true },
-];
-
-const totalPrice: number = calcTotal(products);
+// const totalPrice: number = calcTotal(products);
 // const totalPrice = calcTotal(products); можно не указывать тип
+const totalPrice = calcTotal(products);
 
-console.log(totalPrice)
+// console.log(totalPrice);
+// console.log(getById(users, "2"));
+// console.log(getById(products, "5"));
+// console.log(attachMeta(Date));
 
-console.log(getById(users, "2"));
-console.log(getById(products, "5"));
-console.log(attachMeta(Date));
+// console.log(getProductsInStock(products));
+// console.log(getProductsOutOfStock(products));
+// printProducts(products);
